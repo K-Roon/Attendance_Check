@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동아리출석(P-CO)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        #home {
+            text-align: center;
+            font-size: 30px;
+        }
+
+        #inputting{
+            margin: 0 auto;
+            text-align: center;
+            width: 370px;
+            height: 70px;
+        }
+        #inputting>#name {
+            margin:0;
+            padding:0;
+            border-radius: 10px;
+            width: 200px;
+            height: 46px;
+            font-size: 30px;
+            text-align: center;
+            float: left;
+        }
+
+        .check {
+            border: 0px;
+            border-radius: 10px;
+            width: 100px;
+            height: 50px;
+            font-size: 30px;
+            text-align: center;
+            background-color: #0059ff;
+            color: white;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #result {
+            margin-left: 1px;
+            height: 100%;
+            background-color: black;
+            color: white;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="home">이름을 입력해주세요.</p><br>
+
+    <div id="inputting">
+        <input type="text" id="name" placeholder="이름..">
+        <button onclick="check()" class="check">출석!</button>
+    </div>
+    <div id="result"></div>
+    <script type="text/javascript">
+    var currentTime;
+    currentTime = new Date();
+            document.getElementById("home").innerHTML = "이름을 입력해주세요.</br>지금은 " + currentTime.toLocaleString() + " 입니다.";
+        setInterval(() => {
+            currentTime = new Date();
+            document.getElementById("home").innerHTML = "이름을 입력해주세요.</br>지금은 " + currentTime.toLocaleString() + " 입니다.";
+        }, 1000);
+
+        function check() {
+            if (document.getElementById("name").value == "" || document.getElementById("name").value == null) {
+                alert("이름을 입력해주세요.");
+            } else if (document.getElementById("name").value == "/출석확인") {
+                alert("출석 로그를 확인합니다.");
+                for (var i = 0; i < localStorage.length; i++) {
+                    var myKey = localStorage.key(i);
+                    document.getElementById("result").innerHTML += myKey + " : " + localStorage.getItem(myKey) + "</br>";
+                }
+            } else if (document.getElementById("name").value == "/모두삭제") {
+                var pw = prompt("이 기능은 관리자 전용입니다. 관리자로부터 부여받은 전용코드를 입력하세요.");
+                var delete_name;
+                if (pw == "delete at all") {
+                    delete_name = "누군가";
+                    alert("모두 제거합니다.");
+                    localStorage.clear();
+                    document.getElementById("result").innerHTML = delete_name + " (이)가 로그를 모두 지웠어요.</br>";
+                } else if (pw == currentTime.toLocaleDateString() + "3dpco") {
+                    delete_name = "Someone";
+                    alert("모두 제거합니다.");
+                    localStorage.clear();
+                    document.getElementById("result").innerHTML = delete_name + " (이)가 로그를 모두 지웠어요.</br>";
+                } else {
+                    alert("관리자로부터 부여받은 코드가 맞지 않습니다.\n관리자에게 문의해주시고, 권한이 있는지 확인해주세요.");
+                }
+            } else if (document.getElementById("name").value == "/도움말" || document.getElementById("name").value == "/?") {
+                var pw = prompt("이 기능은 관리자 전용입니다. 관리자로부터 부여받은 전용코드를 입력하세요.");
+                var delete_name;
+                if (pw == currentTime.toLocaleDateString() + "3dpco") {
+                    delete_name = "SOMEONE";
+                    alert("★★커멘드 도움말★★\n/출석확인: 동아리에 출석한 사람이 누구있는지 확인합니다.\n/모두삭제: 출석명부에 다 적었으면 사용하세요. 로그부분도 모두 삭제시켜요. 삭제시 복구가 불가능하니 신중하게 사용해주세요!");
+
+                    document.getElementById("result").innerHTML = delete_name + " (이)가 도움말을 확인했어요.</br>";
+                } else {
+                    alert("관리자로부터 부여받은 코드가 맞지 않습니다.\n관리자에게 문의해주시고, 권한이 있는지 확인해주세요.");
+                }
+            } else {
+                alert("안녕하세요! " + document.getElementById("name").value + "님!\n" + currentTime.toLocaleString() + " 에 출석처리가 되었어요. ");
+                localStorage.setItem(document.getElementById("name").value, currentTime.toLocaleString());
+                document.getElementById("result").innerHTML += document.getElementById("name").value + "님이 " + currentTime.toLocaleString() + " 에 출석함. </br>";
+            }
+            document.getElementById("name").value = "";
+        };
+
+        let input = document.querySelector('#name');
+        input.addEventListener('keyup', v => {
+            if (v.keyCode == 13) {
+                check();
+            }
+        })
+    </script>
+</body>
+
+</html>
